@@ -1,0 +1,35 @@
+{
+    "name": "hexo-mermaid-diagram",
+    "version": "1.0.0",
+    "description": "A Hexo plugin for rendering Mermaid diagrams with iframe-based security",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "hexo",
+        "mermaid",
+        "diagram",
+        "plugin",
+        "markdown"
+    ],
+    "author": "",
+    "license": "MIT",
+    "peerDependencies": {
+        "hexo": "^6.0.0 || ^7.0.0"
+    },
+    "devDependencies": {
+        "hexo": "^7.0.0"
+    },
+    "dependencies": {
+        "cheerio": "^1.1.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/your-username/hexo-mermaid-diagram.git"
+    },
+    "bugs": {
+        "url": "https://github.com/your-username/hexo-mermaid-diagram/issues"
+    },
+    "homepage": "https://github.com/your-username/hexo-mermaid-diagram#readme"
+}
