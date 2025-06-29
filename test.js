@@ -10,7 +10,6 @@ function testMermaidPlugin() {
                 version: '10.6.1',
                 theme: 'default',
                 class_name: 'mermaid-diagram',
-                zoom: true
             }
         },
         extend: {

@@ -42,8 +42,6 @@ mermaid_diagram:
   theme: "default"
   # 自定义 CSS 类名
   class_name: "mermaid-diagram"
-  # 是否启用点击放大
-  zoom: true
 ```
 
 ## 工作原理

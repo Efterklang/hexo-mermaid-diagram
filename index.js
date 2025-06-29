@@ -22,7 +22,6 @@ hexo.extend.filter.register('after_render:html', function (htmlContent) {
     const version = config.version || '10.6.1';
     const theme = config.theme || 'default';
     const className = config.class_name || 'mermaid-diagram';
-    const enableZoom = config.zoom !== false;
 
     // 解析 HTML
     const $ = cheerio.load(htmlContent);
@@ -121,7 +120,7 @@ hexo.extend.filter.register('after_render:html', function (htmlContent) {
             
             <iframe 
               class="${className}-iframe"
-              src="data:text/html;charset=utf-8,${encodeURIComponent(generateMermaidHTML(mermaidCode, theme, version, enableZoom))}"
+              src="data:text/html;charset=utf-8,${encodeURIComponent(generateMermaidHTML(mermaidCode, theme, version))}"
               frameborder="0"
               scrolling="no"
               sandbox="allow-scripts"
@@ -165,7 +164,7 @@ function escapeHtml(text) {
 /**
  * 生成 Mermaid iframe 的 HTML 内容
  */
-function generateMermaidHTML(mermaidCode, theme, version, enableZoom) {
+function generateMermaidHTML(mermaidCode, theme, version) {
     return `<!DOCTYPE html>
 <html>
 <head>
@@ -184,81 +183,11 @@ function generateMermaidHTML(mermaidCode, theme, version, enableZoom) {
         
         .mermaid {
             text-align: center;
-            ${enableZoom ? 'cursor: pointer;' : ''}
+            cursor: pointer;
             transform-origin: center;
             transition: transform 0.2s ease;
         }
         
-        ${enableZoom ? `
-        .mermaid:hover {
-            transform: scale(1.02);
-            transition: transform 0.2s ease;
-        }
-        
-        .zoom-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: pointer;
-        }
-        
-        .zoom-content {
-            max-width: 90%;
-            max-height: 90%;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            cursor: default;
-        }
-        
-        .fullscreen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            cursor: pointer;
-        }
-        
-        .fullscreen-content {
-            max-width: 95%;
-            max-height: 95%;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            cursor: default;
-            overflow: auto;
-        }
-        
-        .fullscreen-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        ` : ''}
         
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -271,20 +200,6 @@ function generateMermaidHTML(mermaidCode, theme, version, enableZoom) {
 <body>
     <div class="mermaid">${escapeHtml(mermaidCode)}</div>
     
-    ${enableZoom ? `
-    <div class="zoom-overlay" id="zoomOverlay">
-        <div class="zoom-content" id="zoomContent">
-            <div class="mermaid" id="zoomedDiagram">${escapeHtml(mermaidCode)}</div>
-        </div>
-    </div>
-    
-    <div class="fullscreen-overlay" id="fullscreenOverlay">
-        <button class="fullscreen-close" id="fullscreenClose" aria-label="Close">×</button>
-        <div class="fullscreen-content" id="fullscreenContent">
-            <div class="mermaid" id="fullscreenDiagram">${escapeHtml(mermaidCode)}</div>
-        </div>
-    </div>
-    ` : ''}
     
     <script>
         // 配置 Mermaid
@@ -379,18 +294,6 @@ function generateMermaidHTML(mermaidCode, theme, version, enableZoom) {
                     }, '*');
                 }, 100);
                 
-                ${enableZoom ? `
-                // 添加点击放大功能
-                const mainDiagram = document.querySelector('.mermaid');
-                if (mainDiagram) {
-                    mainDiagram.addEventListener('click', showZoom);
-                }
-                
-                const overlay = document.getElementById('zoomOverlay');
-                if (overlay) {
-                    overlay.addEventListener('click', hideZoom);
-                }
-                ` : ''}
                 
             } catch (error) {
                 console.error('Mermaid rendering error:', error);
@@ -398,55 +301,6 @@ function generateMermaidHTML(mermaidCode, theme, version, enableZoom) {
             }
         }
         
-        ${enableZoom ? `
-        function showZoom() {
-            const overlay = document.getElementById('zoomOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                // 重新渲染放大的图表
-                mermaid.render('zoomed-svg', document.getElementById('zoomedDiagram').textContent)
-                    .then(({ svg }) => {
-                        document.getElementById('zoomedDiagram').innerHTML = svg;
-                    });
-            }
-        }
-        
-        function hideZoom(e) {
-            if (e.target.id === 'zoomOverlay') {
-                document.getElementById('zoomOverlay').style.display = 'none';
-            }
-        }
-        
-        function showFullscreen() {
-            const overlay = document.getElementById('fullscreenOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                // 重新渲染全屏的图表
-                mermaid.render('fullscreen-svg', document.getElementById('fullscreenDiagram').textContent)
-                    .then(({ svg }) => {
-                        document.getElementById('fullscreenDiagram').innerHTML = svg;
-                    });
-            }
-        }
-        
-        function hideFullscreen() {
-            document.getElementById('fullscreenOverlay').style.display = 'none';
-        }
-        
-        // 绑定全屏预览事件
-        const fullscreenOverlay = document.getElementById('fullscreenOverlay');
-        const fullscreenClose = document.getElementById('fullscreenClose');
-        if (fullscreenOverlay) {
-            fullscreenOverlay.addEventListener('click', function(e) {
-                if (e.target.id === 'fullscreenOverlay') {
-                    hideFullscreen();
-                }
-            });
-        }
-        if (fullscreenClose) {
-            fullscreenClose.addEventListener('click', hideFullscreen);
-        }
-        ` : ''}
         
         // 启动渲染
         renderDiagram();
