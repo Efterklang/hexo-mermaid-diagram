@@ -107,7 +107,7 @@ sequenceDiagram
 
     // 加载插件
     global.hexo = hexo;
-    require('./index.js');
+    require('../index.js');
 }
 
 // 如果直接运行此文件，执行测试

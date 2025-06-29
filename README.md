@@ -1,14 +1,16 @@
 # Hexo Mermaid Diagram Plugin
 
-一个为 Hexo 博客系统提供 Mermaid 图表支持的插件，基于 iframe 的安全渲染方案。
+仿照 GitHub 的实现方式，使用 iframe 渲染 Mermaid 图表
 
-## 特性
+支持以下特性：
 
-- 🔒 **安全渲染**: 使用 iframe 隔离用户内容，防止潜在的安全风险
-- ⚡ **异步加载**: 图表异步渲染，不阻塞页面加载
-- 🎨 **渐进增强**: 在不支持 JavaScript 的环境中显示原始代码
-- 📱 **响应式**: 自适应不同屏幕尺寸
-- 🎯 **简单易用**: 直接在 Markdown 中使用 mermaid 代码块
+- 放大/缩小图表
+- 上下左右移动
+- 设置主题 (WIP: Dark/light mode support)
+
+## Preview
+
+![image](https://github.com/user-attachments/assets/d8144401-5de3-47c5-a75c-59348532b598)
 
 ## 安装
 
